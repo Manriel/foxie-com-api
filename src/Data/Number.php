@@ -2,7 +2,7 @@
 
 namespace Foxie\Data;
 
-class Number
+class Number extends Data
 {
     protected $fields = [
         'number'     => 'integer',

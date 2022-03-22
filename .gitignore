@@ -1,6 +1,6 @@
-/vendor/
-/build/
-/tests/artifact/*.zip
+vendor/
+build/
+tests/artifact/*.zip
 .idea/
 .env
 .phpunit.result.cache
