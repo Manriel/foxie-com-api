@@ -1,0 +1,44 @@
+{
+  "name": "manriel/foxie-com-api",
+  "description": "Implementation of foxie.com API",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Roman Shershnev",
+      "email": "readytoban@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^7.2|^8.0",
+    "ext-json": "*",
+    "ext-curl": "*"
+  },
+  "require-dev": {
+    "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
+    "mockery/mockery": "^1.3",
+    "phpunit/phpunit": "^8.5 || ^9"
+  },
+  "autoload": {
+    "psr-4": {
+      "Foxie\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Foxie\\Test\\": "tests/"
+    }
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "scripts": {
+    "build:clean": "git clean -fX build/",
+    "phpunit": "phpunit --verbose --colors=always",
+    "phpunit-coverage": "phpunit --verbose --colors=always --coverage-html build/coverage",
+    "test": [
+      "@phpunit"
+    ]
+  }
+}
