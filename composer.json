@@ -14,8 +14,6 @@
     "ext-curl": "*"
   },
   "require-dev": {
-    "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
-    "mockery/mockery": "^1.3",
     "phpunit/phpunit": "^8.5 || ^9"
   },
   "autoload": {
