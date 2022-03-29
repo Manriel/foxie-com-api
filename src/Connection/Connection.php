@@ -3,6 +3,7 @@
 namespace Foxie\Connection;
 
 use Foxie\Exception\ConnectionException;
+use Foxie\Parser\Parser;
 
 class Connection implements Contract\ConnectionInterface
 {

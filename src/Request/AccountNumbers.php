@@ -31,9 +31,10 @@ class AccountNumbers extends Request
     protected function getResult($result): DataInterface
     {
         $collection = new Collection();
-        foreach ($result as $item) {
+        
+        foreach ($result['result']['smsnumbers'] as $item) {
             $collection[] = new AccountNumber($item);
         }
-        return new $collection;
+        return $collection;
     }
 }

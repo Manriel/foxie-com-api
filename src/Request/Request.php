@@ -5,6 +5,7 @@ namespace Foxie\Request;
 use Foxie\Connection\Contract\ConnectionInterface;
 use Foxie\Data\Contract\DataInterface;
 use Foxie\Exception\ValidationException;
+use Foxie\Parser\Parser;
 use Foxie\Request\Contract\RequestInterface;
 
 abstract class Request implements RequestInterface
@@ -78,6 +79,10 @@ abstract class Request implements RequestInterface
         return $data;
     }
     
+    public function parseResponse($response): ?array
+    {
+        return Parser::parse($response);
+    }
     
     /**
      * @inheritDoc
@@ -87,7 +92,8 @@ abstract class Request implements RequestInterface
         $data = $this->transformData($data);
         $this->validate($data);
         
-        return $this->getResult($this->connection->request($this->getMethod(), $this->getEndpoint(), $data));
+        $response = $this->connection->request($this->getMethod(), $this->getEndpoint(), $data);
+        return $this->getResult($this->parseResponse($response));
     }
     
 }

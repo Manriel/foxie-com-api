@@ -38,7 +38,7 @@ class TypeCaster
     {
         switch ($type) {
             case DateTime::class:
-                return DateTime::createFromFormat(DateTimeInterface::ISO8601, $value);
+                return DateTime::createFromFormat(DateTimeInterface::RFC3339_EXTENDED, $value);
             default:
                 throw new TypeCastingException(sprintf('Uncastable type %s', $type));
         }

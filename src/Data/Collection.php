@@ -2,7 +2,7 @@
 
 namespace Foxie\Data;
 
-class Collection implements Contract\DataInterface, \ArrayAccess, \Serializable
+class Collection implements Contract\DataInterface, \ArrayAccess, \Serializable, \Countable
 {
     protected $data;
     
@@ -16,17 +16,21 @@ class Collection implements Contract\DataInterface, \ArrayAccess, \Serializable
         return $this->data[$field];
     }
     
-    public function __set($field, $value)
+    public function __set($field, $value): void
     {
-        $this->data[$field] = $value;
+        if ($field !== null) {
+            $this->data[$field] = $value;
+        } else {
+            $this->data[] = $value;
+        }
     }
     
-    public function __isset($field)
+    public function __isset($field): bool
     {
         return isset($this->data[$field]);
     }
     
-    public function __unset($field)
+    public function __unset($field): void
     {
         unset($this->data[$field]);
     }
@@ -34,7 +38,7 @@ class Collection implements Contract\DataInterface, \ArrayAccess, \Serializable
     /**
      * @inheritDoc
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): void
     {
         $this->__isset($offset);
     }
@@ -50,7 +54,7 @@ class Collection implements Contract\DataInterface, \ArrayAccess, \Serializable
     /**
      * @inheritDoc
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         $this->__set($offset, $value);
     }
@@ -58,7 +62,7 @@ class Collection implements Contract\DataInterface, \ArrayAccess, \Serializable
     /**
      * @inheritDoc
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         $this->__unset($offset);
     }
@@ -83,5 +87,31 @@ class Collection implements Contract\DataInterface, \ArrayAccess, \Serializable
         $params = unserialize($data, [self::class]);
         
         $this->data = $params['data'];
+    }
+    
+    public function __serialize() {
+        $this->serialize();
+    }
+    
+    public function __unserialize($data) {
+        $this->unserialize($data);
+    }
+    
+    public function count(): int
+    {
+        return count($this->data);
+    }
+    
+    public function toArray(): array
+    {
+        $result = [];
+        foreach ($this->data as $k => $v) {
+            if ($k !== null) {
+                $result[$k] = $v->toArray();
+            } else {
+                $result[] = $v->toArray();
+            }
+        }
+        return $result;
     }
 }

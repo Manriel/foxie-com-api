@@ -2,11 +2,9 @@
 
 namespace Foxie\Parser;
 
-use Foxie\Data\Contract\DataInterface;
-
 class Parser
 {
-    public static function parse($string): DataInterface
+    public static function parse($string): ?array
     {
         return json_decode($string, true);
     }

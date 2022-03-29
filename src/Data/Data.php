@@ -63,9 +63,9 @@ abstract class Data implements Contract\DataInterface, \ArrayAccess, \Serializab
     /**
      * @inheritDoc
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
-        $this->__isset($offset);
+        return $this->__isset($offset);
     }
     
     /**
@@ -79,7 +79,7 @@ abstract class Data implements Contract\DataInterface, \ArrayAccess, \Serializab
     /**
      * @inheritDoc
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         $this->__set($offset, $value);
     }
@@ -87,7 +87,7 @@ abstract class Data implements Contract\DataInterface, \ArrayAccess, \Serializab
     /**
      * @inheritDoc
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         $this->__unset($offset);
     }
@@ -112,6 +112,19 @@ abstract class Data implements Contract\DataInterface, \ArrayAccess, \Serializab
         $params = unserialize($data, [self::class]);
         
         $this->attributes = $params['attributes'];
+    }
+    
+    public function __serialize() {
+        $this->serialize();
+    }
+    
+    public function __unserialize($data) {
+        $this->unserialize($data);
+    }
+    
+    public function toArray(): array
+    {
+        return $this->attributes;
     }
     
 }
