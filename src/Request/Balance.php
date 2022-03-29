@@ -28,6 +28,6 @@ class Balance extends Request
      */
     protected function getResult($result): DataInterface
     {
-        return new \Foxie\Data\Balance($result);
+        return new \Foxie\Data\Balance($result['result']);
     }
 }

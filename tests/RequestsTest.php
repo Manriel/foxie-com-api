@@ -17,7 +17,9 @@ class RequestsTest extends TestCase
         $connectionStub->method('request')
                        ->with('GET', '/account/balance')
                        ->will($this->returnValue('{
-  "balance": 0
+  "result": {
+    "balance": 0
+  }
 }'));
         
         $expectedResult = [
