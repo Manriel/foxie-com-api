@@ -2,6 +2,13 @@
 
 namespace Foxie\Data;
 
+/**
+ * @property string  $id
+ * @property integer $to
+ * @property integer $from
+ * @property string  $body
+ * @property float   $balance
+ */
 class Message extends Data
 {
     protected $fields = [
