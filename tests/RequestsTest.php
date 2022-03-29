@@ -6,6 +6,7 @@ use Foxie\Request\AccountNumbers;
 use Foxie\Request\Balance;
 use Foxie\Request\Messages;
 use Foxie\Request\NumberLookup;
+use Foxie\Request\NumberLookupBulk;
 
 class RequestsTest extends TestCase
 {
@@ -132,6 +133,37 @@ class RequestsTest extends TestCase
         $request = new NumberLookup($connectionStub);
         $result  = $request->send([
                                       'numbers' => [15552128888],
+                                  ]);
+        
+        $this->assertSame($expectedResult, $result->toArray());
+    }
+    
+    public function testNumberLookupBulkRequest()
+    {
+        $connectionStub = $this->makeConnection();
+        
+        $connectionStub->method('request')
+                       ->with('POST', '/numberlookup/bulk')
+                       ->will($this->returnValue('{
+  "result": {
+    "uuid": "ada8b5a6-1000-4368-8fa8-7ec32a89cb81",
+    "status": "queued"
+  }
+}'));
+        
+        $expectedResult = [
+            'uuid'   => 'ada8b5a6-1000-4368-8fa8-7ec32a89cb81',
+            'status' => 'queued',
+        ];
+        
+        $request = new NumberLookupBulk($connectionStub);
+        $result  = $request->send([
+                                      'numbers'          => [
+                                          '15552128888',
+                                      ],
+                                      'callbackURL'      => 'https://example.com',
+                                      'callbackMethod'   => 'POST',
+                                      'callbackDataType' => 'data',
                                   ]);
         
         $this->assertSame($expectedResult, $result->toArray());
