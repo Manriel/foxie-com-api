@@ -6,6 +6,7 @@ namespace Foxie\Data;
  * @property integer $number
  * @property string  $carrier
  * @property string  $carrierID
+ * @property string  $numberType
  * @property boolean $valid
  * @property string  $country
  */

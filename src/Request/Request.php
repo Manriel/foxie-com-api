@@ -65,7 +65,7 @@ abstract class Request implements RequestInterface
         }
         
         if ( !empty($missingFields)) {
-            throw new ValidationException('Missing required fields: %s', implode(', ', $missingFields));
+            throw new ValidationException(sprintf('Missing required fields: %s', implode(', ', $missingFields)));
         }
     }
     
