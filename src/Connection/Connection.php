@@ -3,18 +3,26 @@
 namespace Foxie\Connection;
 
 use Foxie\Exception\ConnectionException;
-use Foxie\Parser\Parser;
 
 class Connection implements Contract\ConnectionInterface
 {
     protected $url = 'https://api.foxie.net';
     protected $credentials;
     
+    protected $curlHandler;
+    
     public function __construct(Credentials $credentials, array $config = [])
     {
         $this->credentials = $credentials;
         if (isset($config['url']) && strlen($config['url']) > 0) {
             $this->url = $config['url'];
+        }
+    }
+    
+    public function __destruct()
+    {
+        if ($this->curlHandler) {
+            curl_close($this->curlHandler);
         }
     }
     
@@ -39,16 +47,7 @@ class Connection implements Contract\ConnectionInterface
     
     public function request(string $method, string $endpoint, ?array $data = [])
     {
-        $curlOptions = [
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_FRESH_CONNECT  => true,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_FAILONERROR    => true,
-            CURLOPT_HTTPAUTH       => CURLAUTH_BASIC,
-            CURLOPT_HTTPHEADER     => [
-                $this->credentials->getAuthHeader(),
-            ],
-        ];
+        $curlOptions = [];
         
         if (strtoupper($method) == 'POST') {
             $curlOptions[CURLOPT_URL]        = $this->getRequestURL($endpoint);
@@ -58,20 +57,40 @@ class Connection implements Contract\ConnectionInterface
             $curlOptions[CURLOPT_URL]     = $this->getRequestURL($endpoint, $data);
             $curlOptions[CURLOPT_HTTPGET] = true;
         }
-        
-        $ch = curl_init();
-        curl_setopt_array($ch, $curlOptions);
-        try {
-            $result = curl_exec($ch);
-            $info   = curl_getinfo($ch);
-            
-            if ($errorCode = curl_errno($ch)) {
-                throw new ConnectionException(curl_error($ch), $errorCode);
-            }
-        } finally {
-            curl_close($ch);
+    
+        $handler = $this->getCurlHandler($curlOptions);
+        $result  = curl_exec($handler);
+        $info    = curl_getinfo($handler);
+    
+        if ($errorCode = curl_errno($handler)) {
+            throw new ConnectionException(curl_error($handler), $errorCode);
         }
         
         return $result;
+    }
+    
+    protected function getCurlHandler($options)
+    {
+        if ( !$this->curlHandler) {
+            $this->curlHandler = curl_init();
+        }
+        
+        curl_setopt_array($this->curlHandler, array_merge($this->getCurlBaseOptions(), $options));
+        
+        return $this->curlHandler;
+    }
+    
+    protected function getCurlBaseOptions(): array
+    {
+        return [
+            CURLOPT_RETURNTRANSFER => true,
+            // CURLOPT_FRESH_CONNECT  => true,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_FAILONERROR    => true,
+            CURLOPT_HTTPAUTH       => CURLAUTH_BASIC,
+            CURLOPT_HTTPHEADER     => [
+                $this->credentials->getAuthHeader(),
+            ],
+        ];
     }
 }
