@@ -2,13 +2,14 @@
 
 namespace Foxie\Request;
 
-use Foxie\Data\Collection;
 use Foxie\Data\Contract\DataInterface;
 use Foxie\Data\Enqueued;
-use Foxie\Data\Number;
 
 class NumberLookupBulk extends Request
 {
+    const TYPE_FILE = 'file';
+    const TYPE_DATA = 'data';
+    
     protected $requiredFields = [
         'numbers',
         'callbackURL',
