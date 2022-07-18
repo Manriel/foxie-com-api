@@ -74,8 +74,8 @@ class Connection implements Contract\ConnectionInterface
         if ( !$this->curlHandler) {
             $this->curlHandler = curl_init();
         }
-        
-        curl_setopt_array($this->curlHandler, array_merge($this->getCurlBaseOptions(), $options));
+    
+        curl_setopt_array($this->curlHandler, ($this->getCurlBaseOptions() + $options));
         
         return $this->curlHandler;
     }
