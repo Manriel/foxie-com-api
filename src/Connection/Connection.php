@@ -37,12 +37,12 @@ class Connection implements Contract\ConnectionInterface
     
     public function get(string $endpoint, ?array $data = [])
     {
-        $this->request('GET', $endpoint, $data);
+        return $this->request('GET', $endpoint, $data);
     }
     
     public function post(string $endpoint, ?array $data = [])
     {
-        $this->request('POST', $endpoint, $data);
+        return $this->request('POST', $endpoint, $data);
     }
     
     public function request(string $method, string $endpoint, ?array $data = [])
